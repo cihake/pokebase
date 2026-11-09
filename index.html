@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>PokéBase</title>
+	<link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+	<header class="site-header" role="banner">
+		<div class="header-inner">
+			<h1 class="site-title">
+				<span class="poke-ball" aria-hidden="true"></span>PokéBase
+			</h1>
+			<div class="search-wrapper" role="search">
+				<label for="search-input" class="visually-hidden">Search by name or Pokédex number</label>
+				<input type="search" id="search-input" class="search-input" placeholder="Search by name or Pokédex number" autocomplete="off" spellcheck="false" />
+			</div>
+		</div>
+	</header>
+	<main class="main-content">
+		<section style="margin-bottom: 2rem;">
+			<h1>Welcome to PokéBase!</h1>
+			<p>
+				Click on a Pokémon to see more information.
+			</p>
+			<p>Ways you can search:</p>
+			<ul>
+				<li>By name &ndash; <span style="font-style: italic;">e.g., "pikachu"</span></li>
+				<li>By Pokédex number &ndash; <span style="font-style: italic;">e.g., "#25"</span></li>
+			</ul>
+		</section>
+		<section aria-label="Pokémon list">
+			<div id="pokemon-grid" class="pokemon-grid" role="list"></div>
+			<div id="status-message" class="status-message"></div>
+		</section>
+		<nav class="pagination" aria-label="Pokémon list pagination">
+			<button id="prev-btn" class="btn btn-secondary" aria-label="Previous page" disabled>
+				&leftarrow; Previous
+			</button>
+			<span id="page-info" class="page-info" aria-live="polite"></span>
+			<button id="next-btn" class="btn btn-secondary" aria-label="Next page">
+				Next &rightarrow;
+			</button>
+		</nav>
+	</main>
+
+	<!-- Detail modal -->
+	<div id="detail-overlay" class="detail-overlay" role="dialog" aria-modal="true" aria-labelledby="detail-name" hidden>
+		<div class="detail-panel">
+			<button id="close-detail" class="close-btn" aria-label="Close Pokémon detail">✕</button>
+			<div id="detail-content" class="detail-content"></div>
+		</div>
+	</div>
+
+	<script src="js/api.js"></script>
+	<script src="js/ui.js"></script>
+	<script src="js/app.js"></script>
+</body>
+
+</html>
