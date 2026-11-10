@@ -28,8 +28,19 @@ const STAT_LABELS = {
 	speed: 'Speed',
 };
 
+// Escape text before it goes into an HTML string, so data is always shown as
+// text and never run as markup.
+function escapeHTML(value) {
+	return String(value)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+
 function typeBadge(type) {
-	return `<span class="type-badge" data-type="${type}">${type}</span>`;
+	return `<span class="type-badge" data-type="${escapeHTML(type)}">${escapeHTML(type)}</span>`;
 }
 
 function statBarClass(value) {
@@ -44,11 +55,11 @@ function buildCardHTML(pokemon) {
 	const { id, name, types, sprites } = pokemon;
 	const primaryType = types[0].type.name;
 	const color = TYPE_COLORS[primaryType] || TYPE_COLORS.normal;
-	const paddedId = String(id).padStart(4, '0');
+	const paddedId = escapeHTML(String(id).padStart(4, '0'));
 	const typeNames = types.map(t => t.type.name).join(' and ');
 
 	const spriteEl = sprites.front_default
-		? `<img class="card-sprite" src="${sprites.front_default}" alt="" width="96" height="96" loading="lazy">`
+		? `<img class="card-sprite" src="${escapeHTML(sprites.front_default)}" alt="" width="96" height="96" loading="lazy">`
 		: `<div class="card-sprite-placeholder" aria-hidden="true">?</div>`;
 
 	return `
@@ -56,13 +67,13 @@ function buildCardHTML(pokemon) {
 			class="pokemon-card"
 			role="listitem"
 			tabindex="0"
-			data-name="${name}"
+			data-name="${escapeHTML(name)}"
 			style="--card-color:${color}"
-			aria-label="${name}, number ${paddedId}, ${typeNames} type"
+			aria-label="${escapeHTML(name)}, number ${paddedId}, ${escapeHTML(typeNames)} type"
 		>
 			<span class="card-id">#${paddedId}</span>
 			${spriteEl}
-			<span class="card-name">${name}</span>
+			<span class="card-name">${escapeHTML(name)}</span>
 			<div class="card-types" aria-hidden="true">
 				${types.map(t => typeBadge(t.type.name)).join('')}
 			</div>
@@ -91,14 +102,14 @@ function renderLoading() {
 function renderError(message) {
 	document.getElementById('pokemon-grid').innerHTML = '';
 	document.getElementById('status-message').innerHTML =
-	`<p role="alert">⚠️ ${message}</p>`;
+	`<p role="alert">⚠️ ${escapeHTML(message)}</p>`;
 }
 
 // ===== EMPTY =====
 function renderEmpty(query) {
 	document.getElementById('pokemon-grid').innerHTML = '';
 	document.getElementById('status-message').innerHTML =
-		`<p>No Pokémon found for "<strong>${query}</strong>". Try an exact name like <em>pikachu</em>.</p>`;
+		`<p>No Pokémon found for "<strong>${escapeHTML(query)}</strong>". Try an exact name like <em>pikachu</em>.</p>`;
 }
 
 // ===== DETAIL MODAL =====
@@ -106,19 +117,19 @@ function renderDetail(pokemon) {
 	const { id, name, types, sprites, stats, height, weight, abilities, base_experience } = pokemon;
 	const primaryType = types[0].type.name;
 	const color = TYPE_COLORS[primaryType] || TYPE_COLORS.normal;
-	const paddedId = String(id).padStart(4, '0');
+	const paddedId = escapeHTML(String(id).padStart(4, '0'));
 
 	const spriteUrl = sprites.other?.['official-artwork']?.front_default || sprites.front_default;
-	const abilityNames = abilities.map(a => a.ability.name.replace(/-/g, ' ')).join(', ');
+	const abilityNames = escapeHTML(abilities.map(a => a.ability.name.replace(/-/g, ' ')).join(', '));
 
 	const battleStatsHTML = stats.map(({ stat, base_stat }) => {
-		const label = STAT_LABELS[stat.name] || stat.name;
+		const label = escapeHTML(STAT_LABELS[stat.name] || stat.name);
 		const pct = Math.min(100, Math.round((base_stat / 255) * 100));
 		const cls = statBarClass(base_stat);
 		return `
 			<div class="battle-stat">
 				<span class="battle-stat-name">${label}</span>
-				<span class="battle-stat-value">${base_stat}</span>
+				<span class="battle-stat-value">${escapeHTML(base_stat)}</span>
 				<div class="battle-stat-bar-track" aria-hidden="true">
 					<div class="battle-stat-bar-fill ${cls}" style="width:${pct}%"></div>
 				</div>
@@ -130,8 +141,8 @@ function renderDetail(pokemon) {
 		<div class="detail-hero">
 			<div class="detail-hero-bg" style="background:${color}"></div>
 			<p class="detail-id">#${paddedId}</p>
-			<img class="detail-sprite" src="${spriteUrl}" alt="${name}" width="180" height="180">
-			<h2 class="detail-name" id="detail-name">${name}</h2>
+			<img class="detail-sprite" src="${escapeHTML(spriteUrl)}" alt="${escapeHTML(name)}" width="180" height="180">
+			<h2 class="detail-name" id="detail-name">${escapeHTML(name)}</h2>
 			<div class="detail-types">
 				${types.map(t => typeBadge(t.type.name)).join('')}
 			</div>
@@ -152,7 +163,7 @@ function renderDetail(pokemon) {
 				</div>
 				<div class="stat-item">
 					<span class="stat-label">Base XP</span>
-					<span class="stat-value">${base_experience ?? '—'}</span>
+					<span class="stat-value">${escapeHTML(base_experience ?? '—')}</span>
 				</div>
 			</div>
 			<h3 class="section-heading">Base Stats</h3>
