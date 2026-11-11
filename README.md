@@ -1,4 +1,4 @@
-# PokéBase: Pokédex Lite
+# Fetch 'Em All: Simple Pokédex
 
 A client-side JavaScript web app that fetches live Pokémon data from [PokéAPI](https://pokeapi.co/) and displays it in an accessible, interactive interface.
 
@@ -13,7 +13,7 @@ A client-side JavaScript web app that fetches live Pokémon data from [PokéAPI]
 ## Project Structure
 
 ```
-pokedex-app/
+fetch-em-all/
   index.html        main HTML shell
   css/styles.css    all styling
   js/api.js         fetch helpers (PokéAPI)
